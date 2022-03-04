@@ -1,2 +1,4 @@
 node_modules/
-authorization_code/client-info.js
+authorization_code/clientInfo.py
+__pycache__/
+.cache
