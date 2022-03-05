@@ -1,4 +1,6 @@
 node_modules/
-authorization_code/clientInfo.py
+authorization_code/spotify_info.py
 __pycache__/
 .cache
+authorization_code/.flask_session
+authorization_code/.spotify_caches
