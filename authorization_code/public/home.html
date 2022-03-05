@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>spotify-share-for-drive</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <style type="text/css">
+        .text-overflow {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 500px;
+        }
+        
+        #nav {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #nav li {
+            width: 140px;
+            text-align: center;
+            background-color: #333;
+            height: 50px;
+            line-height: 50px;
+            margin-right: 2px;
+        }
+        
+        #nav li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            padding: 20px;
+        }
+        
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <ul id="nav">
+            <li><a href="/room">Home</a></li>
+            <li><a href="#">Now</a></li>
+            <li><a href="#">Add</a></li>
+            <li><a href="#">Search</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <div id="loggedin">
+            <div id="user-profile">
+            </div>
+            <a href="/sign_out" class="btn btn-primary">delete room</a>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+        (function() {
+            function escapeHTML(string) {
+                return string.replace(/&/g, '&lt;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, "&#x27;");
+            }
+
+            $.ajax({
+                    type: "GET",
+                    url: "/current_user",
+                    dataType: "json"
+                })
+                .done(function(data) {
+                    var display_name = escapeHTML(data['display_name']);
+                    target = document.getElementById("user-profile");
+                    target.innerHTML = "<h1>Logged in as " + display_name;
+                })
+                .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert('fali to read \'current_user\'');
+                });
+        })();
+    </script>
+
+</body>
+
+</html>

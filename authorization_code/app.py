@@ -1,17 +1,13 @@
 import os
-from urllib import response
-from flask import Flask, make_response, redirect, request, session
+from flask import Flask, redirect, request, session
 from flask_session import Session
 from spotify_info import export_spotify_info
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-import urllib.parse
-import requests
 import uuid
 
 export_spotify_info()
 
-app = Flask(__name__, static_folder='./public')
+app = Flask(__name__, static_folder=os.getcwd() + '/public')
 app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
@@ -31,7 +27,7 @@ def index():
     return app.send_static_file('index.html')
 
 
-@ app.route('/login')
+@app.route('/login')
 def login():
     if not session.get('uuid'):
         # Step 1. Visitor is unknown, give random ID
@@ -46,11 +42,7 @@ def login():
     if request.args.get("code"):
         # Step 3. Being redirected from Spotify auth page
         token_info = auth_manager.get_access_token(request.args.get("code"))
-        return redirect('/#' +
-                        urllib.parse.urlencode({
-                            'access_token': token_info['access_token'],
-                            'refresh_token': token_info['refresh_token']})
-                        )
+        return redirect('/home')
 
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         # Step 2. If not already signed in, redirect to sigin in link
@@ -58,14 +50,12 @@ def login():
         return redirect(auth_url)
 
     # Step 4. Signed in
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect('/')
-    token_info = cache_handler.get_cached_token()
-    return redirect('/#' +
-                    urllib.parse.urlencode({
-                        'access_token': token_info['access_token'],
-                        'refresh_token': token_info['refresh_token']})
-                    )
+    return redirect('/home')
+
+
+@app.route('/home')
+def home():
+    return app.send_static_file('home.html')
 
 
 @app.route('/sign_out')
@@ -77,6 +67,17 @@ def sign_out():
     except OSError as e:
         print("Error: %s - %s." % (e.filename, e.strerror))
     return redirect('/')
+
+
+@app.route('/current_user')
+def current_user():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/room')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    return spotify.current_user()
 
 
 if __name__ == '__main__':
