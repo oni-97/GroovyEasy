@@ -80,5 +80,24 @@ def current_user():
     return spotify.current_user()
 
 
+@app.route('/now_playing')
+def now_playing():
+    return app.send_static_file('now-playing.html')
+
+
+@app.route('/currently_playing')
+def currently_playing():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/now_playing')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    track = spotify.current_user_playing_track()
+    if not track is None:
+        return track
+    return "No track currently playing."
+
+
 if __name__ == '__main__':
     app.run(threaded=True, port=8888)
