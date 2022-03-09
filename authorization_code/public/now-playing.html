@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>spotify-share-for-drive</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <style type="text/css">
+        .text-overflow {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 500px;
+        }
+        
+        #nav {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #nav li {
+            width: 140px;
+            text-align: center;
+            background-color: #333;
+            height: 50px;
+            line-height: 50px;
+            margin-right: 2px;
+        }
+        
+        #nav li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            padding: 20px;
+        }
+        
+        body {
+            text-align: center;
+        }
+        
+        #now-playing-track {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .card-container {
+            display: flex;
+            max-width: 750px;
+            height: 300;
+        }
+        
+        .card-img img {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .card-text {
+            width: 100%;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <ul id="nav">
+            <li><a href="/home">Home</a></li>
+            <li><a href="/now_playing">Now</a></li>
+            <li><a href="#">Add</a></li>
+            <li><a href="#">Search</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <div id="loggedin">
+            <h1>Currently playing track</h1>
+            <div id="now-playing-track" class="card-container">
+                <div class="card-img" id="song-img">
+                </div>
+                <div class="card-text" id="song-info">
+                    <div class="card-img" id="song-name">
+                    </div>
+                    <div class="card-img" id="artists-name">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+        (function() {
+            function escapeHTML(string) {
+                return string.replace(/&/g, '&lt;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, "&#x27;");
+            }
+
+            $.ajax({
+                    type: "GET",
+                    url: "/currently_playing",
+                    // dataType: "json"
+                })
+                .done(function(data) {
+                    if (data == 'No track currently playing.') {
+                        target = document.getElementById("now-playing-track");
+                        target.innerHTML = data;
+                    } else {
+                        var song_name = data['item']['name'];
+                        var artists_name = data['item']['artists'][0]['name'];
+                        var song_image_uri = data['item']['album']['images'][1]["url"];
+
+                        target = document.getElementById("song-img");
+                        target.innerHTML = "<a href=\"#\"><img \" src=\"" +
+                            song_image_uri +
+                            "\" alt=\"image of album\" /></a>";
+                        target = document.getElementById("song-name");
+                        target.innerHTML = "<h2>Title :   " + song_name + "</h2>";
+                        target = document.getElementById("artists-name");
+                        target.innerHTML = "<h2>Artist : " + artists_name + "</h2>";
+                    }
+                })
+                .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert('fali to read \'currently_playing\'');
+                });
+        })();
+    </script>
+
+</body>
+
+</html>
