@@ -4,6 +4,7 @@
 <head>
     <title>spotify-share-for-drive</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <style type="text/css">
         .text-overflow {
             overflow: hidden;
@@ -40,6 +41,7 @@
         
         #now-playing-track {
             margin-top: 20px;
+            margin-bottom: 20px;
             text-align: left;
         }
         
@@ -57,6 +59,80 @@
         .card-text {
             width: 100%;
             margin: 20px;
+        }
+        
+        .resume-ans-pause {
+            margin-top: 20px;
+        }
+        
+        #resume,
+        #pause {
+            display: none;
+        }
+        
+        .video_play {
+            display: inline-block;
+            position: relative;
+            width: 1em;
+            height: 1em;
+            border: 0.05em solid currentColor;
+            border-radius: 50%;
+            color: #000;
+            font-size: 100px;
+        }
+        
+        .video_play::before {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translateY(-50%);
+            width: 0px;
+            height: 0px;
+            border: 0.3em solid transparent;
+            border-left: 0.5em solid currentColor;
+            box-sizing: border-box;
+            content: "";
+        }
+        
+        .video_play:hover {
+            cursor: pointer;
+            opacity: .7;
+        }
+        
+        .video_pause {
+            display: inline-block;
+            position: relative;
+            width: 1em;
+            height: 1em;
+            border: 0.05em solid currentColor;
+            border-radius: 50%;
+            color: #000;
+            font-size: 100px;
+        }
+        
+        .video_pause::before,
+        .video_pause::after {
+            position: absolute;
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            width: 0.1em;
+            height: 0.5em;
+            box-sizing: border-box;
+            background-color: currentColor;
+            content: "";
+        }
+        
+        .video_pause::before {
+            left: 40%;
+        }
+        
+        .video_pause::after {
+            left: 60%;
+        }
+        
+        .video_pause:hover {
+            cursor: pointer;
+            opacity: .7;
         }
     </style>
 </head>
@@ -84,20 +160,29 @@
                     </div>
                 </div>
             </div>
+
+            <div class="resume-and-pause">
+                <div id="resume">
+                    <div class="video_play" id="resume-btn"><i class="fa-solid fa-circle-play"></i></div>
+                </div>
+                <div id="pause">
+                    <div class="video_pause" id="pause-btn"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script>
-        (function() {
-            function escapeHTML(string) {
-                return string.replace(/&/g, '&lt;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, "&#x27;");
-            }
+        function escapeHTML(string) {
+            return string.replace(/&/g, '&lt;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, "&#x27;");
+        }
 
+        function update() {
             $.ajax({
                     type: "GET",
                     url: "/currently_playing",
@@ -107,10 +192,13 @@
                     if (data == 'No track currently playing.') {
                         target = document.getElementById("now-playing-track");
                         target.innerHTML = data;
+                        $('#resume').hide();
+                        $('#pause').hide();
                     } else {
-                        var song_name = data['item']['name'];
-                        var artists_name = data['item']['artists'][0]['name'];
-                        var song_image_uri = data['item']['album']['images'][1]["url"];
+                        var song_name = escapeHTML(data['item']['name']);
+                        var artists_name = escapeHTML(data['item']['artists'][0]['name']);
+                        var song_image_uri = escapeHTML(data['item']['album']['images'][1]["url"]);
+                        var is_playing = data['is_playing'];
 
                         target = document.getElementById("song-img");
                         target.innerHTML = "<a href=\"#\"><img \" src=\"" +
@@ -120,12 +208,23 @@
                         target.innerHTML = "<h2>Title :   " + song_name + "</h2>";
                         target = document.getElementById("artists-name");
                         target.innerHTML = "<h2>Artist : " + artists_name + "</h2>";
+
+                        if (is_playing) {
+                            $('#resume').hide();
+                            $('#pause').show();
+                        } else {
+                            $('#resume').show();
+                            $('#pause').hide();
+                        }
                     }
                 })
                 .fail(function(XMLHttpRequest, textStatus, errorThrown) {
                     alert('fali to read \'currently_playing\'');
                 });
-        })();
+        }
+
+        update();
+        setInterval(update, 10000);
     </script>
 
 </body>
