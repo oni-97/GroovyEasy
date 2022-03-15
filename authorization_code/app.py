@@ -35,7 +35,7 @@ def login():
 
     cache_handler = spotipy.cache_handler.CacheFileHandler(
         cache_path=session_cache_path())
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope='user-read-currently-playing playlist-modify-private',
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope='user-read-currently-playing user-modify-playback-state',
                                                cache_handler=cache_handler,
                                                show_dialog=True)
 
@@ -97,6 +97,54 @@ def currently_playing():
     if not track is None:
         return track
     return "No track currently playing."
+
+
+@app.route('/pause_playback')
+def pause_playback():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/now_playing')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.pause_playback()
+    return redirect('/now_playing')
+
+
+@app.route('/start_playback')
+def start_playback():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/now_playing')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.start_playback()
+    return redirect('/now_playing')
+
+
+@app.route('/next_track')
+def next_track():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/now_playing')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.next_track()
+    return redirect('/now_playing')
+
+
+@app.route('/previous_track')
+def previous_track():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/now_playing')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.previous_track()
+    return redirect('/now_playing')
 
 
 if __name__ == '__main__':
