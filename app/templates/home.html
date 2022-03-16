@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>spotify-share-for-drive</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+
+<body>
+    <header id="header">
+        <ul id="nav">
+            <li><a href="/home">Home</a></li>
+            <li><a href="/now_playing">Now</a></li>
+            <li><a href="/search">Search</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <div id="loggedin">
+            <div id="user-profile">
+            </div>
+            <div id="link-copy">
+                <button type="button" id="copy-page"><span id="cAction">リンクをコピー</span></button>
+            </div>
+            <a href="/sign_out" class="btn btn-primary">delete room</a>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='js/home.js') }}"></script>
+</body>
+
+</html>

@@ -1,19 +1,19 @@
 import os
-from flask import Flask, redirect, request, session
+from flask import Flask, redirect, request, session, render_template
 from flask_session import Session
-from spotify_info import export_spotify_info
+from instance import spotify_info
 import spotipy
 import uuid
 
-export_spotify_info()
+spotify_info.export_spotify_info()
 
-app = Flask(__name__, static_folder=os.getcwd() + '/public')
+app = Flask(__name__, instance_path='/instance')
 app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_FILE_DIR'] = './.flask_session/'
+app.config['SESSION_FILE_DIR'] = './instance/.flask_session/'
 Session(app)
 
-caches_folder = './.spotify_caches/'
+caches_folder = './instance/.spotify_caches/'
 if not os.path.exists(caches_folder):
     os.makedirs(caches_folder)
 
@@ -24,7 +24,7 @@ def session_cache_path():
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 
 @app.route('/login')
@@ -55,7 +55,7 @@ def login():
 
 @app.route('/home')
 def home():
-    return app.send_static_file('home.html')
+    return render_template('home.html')
 
 
 @app.route('/sign_out')
@@ -82,7 +82,7 @@ def current_user():
 
 @app.route('/now_playing')
 def now_playing():
-    return app.send_static_file('now-playing.html')
+    return render_template('now-playing.html')
 
 
 @app.route('/currently_playing')
@@ -149,7 +149,7 @@ def previous_track():
 
 @app.route('/search')
 def search():
-    return app.send_static_file('search.html')
+    return render_template('search.html')
 
 
 @app.route('/search_track')
@@ -163,6 +163,18 @@ def search_track():
     data = spotify.search(q=request.args.get("q"), limit=10,
                           offset=0, type='track', market=None)
     return data
+
+
+@app.route('/add_to_queue')
+def add_to_queue():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/search')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.add_to_queue(uri=request.args.get("uri"))
+    return redirect('/search')
 
 
 if __name__ == '__main__':

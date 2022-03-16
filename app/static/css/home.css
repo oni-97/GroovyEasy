@@ -1,0 +1,29 @@
+body {
+    text-align: center;
+}
+
+#copy-page {
+    display: inline-block;
+    width: 160px;
+    padding: 8px 0;
+    font-size: 1rem;
+    text-align: center;
+    color: #666;
+    border-radius: 6px;
+    background: #c7c7c7;
+    outline: none;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#copy-page:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+#link-copy {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
