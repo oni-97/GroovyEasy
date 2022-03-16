@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>spotify-share-for-drive</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/008973587d.js" crossorigin="anonymous"></script>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/search.css') }}">
+</head>
+
+<body>
+    <header id="header">
+        <ul id="nav">
+            <li><a href="/home">Home</a></li>
+            <li><a href="/now_playing">Now</a></li>
+            <li><a href="/search">Search</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <h1>Search tracks and Add to Queue</h1>
+        <div class="search_box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" placeholder="input keywords" id="search_query_input">
+        </div>
+        <div id="search_result"></div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='js/search.js') }}"></script>
+</body>
+
+</html>

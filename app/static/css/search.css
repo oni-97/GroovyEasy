@@ -1,0 +1,43 @@
+body {
+    text-align: center;
+}
+
+.search_box {
+    display: inline-block;
+    position: relative;
+    margin-top: 10px;
+}
+
+.search_box::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: absolute;
+}
+
+#search_result {
+    margin-top: 20px;
+}
+
+.song_info {
+    display: flex;
+    width: 400px;
+    margin: 10px auto 10px;
+}
+
+.div_song {
+    margin-left: 20px;
+    text-align: left;
+    padding: 5px 0px;
+}
+
+.div_song_name {
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.song_info:hover {
+    cursor: pointer;
+    opacity: .7;
+}
