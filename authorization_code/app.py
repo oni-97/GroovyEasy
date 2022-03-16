@@ -147,5 +147,23 @@ def previous_track():
     return redirect('/now_playing')
 
 
+@app.route('/search')
+def search():
+    return app.send_static_file('search.html')
+
+
+@app.route('/search_track')
+def search_track():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/search')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    data = spotify.search(q=request.args.get("q"), limit=10,
+                          offset=0, type='track', market=None)
+    return data
+
+
 if __name__ == '__main__':
     app.run(threaded=True, port=8888)
