@@ -165,5 +165,17 @@ def search_track():
     return data
 
 
+@app.route('/add_to_queue')
+def add_to_queue():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=session_cache_path())
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/search')
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    spotify.add_to_queue(uri=request.args.get("uri"))
+    return redirect('/search')
+
+
 if __name__ == '__main__':
     app.run(threaded=True, port=8888)

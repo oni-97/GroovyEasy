@@ -76,6 +76,11 @@
             font-size: 2rem;
             margin-bottom: 5px;
         }
+        
+        .song_info:hover {
+            cursor: pointer;
+            opacity: .7;
+        }
     </style>
 </head>
 
@@ -130,10 +135,31 @@
                                 }
                                 artists = artists.replace(/,\s$/g, "");
                                 const img = item['album']['images'][2]['url'];
-                                const uri = item['uri'];
+                                const uri = item['id'];
 
-                                const li_element = document.createElement('li');
+                                var li_element = document.createElement('li');
                                 li_element.className = "song_info";
+                                li_element.onclick = function() {
+                                    var result = window.confirm("add \"" + song_name + "\" to queue?")
+                                    if (result) {
+                                        $.ajax({
+                                                type: "GET",
+                                                url: "/add_to_queue",
+                                                data: {
+                                                    uri: uri
+                                                }
+                                            })
+                                            .done(function(data) {
+                                                alert("added to queue");
+                                            })
+                                            .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+                                                console.log(XMLHttpRequest);
+                                                console.log(textStatus);
+                                                console.log(errorThrown);
+                                                alert('fali to read \'add_to_queue\'');
+                                            });
+                                    }
+                                };
 
                                 const div_img = document.createElement('div');
                                 div_img.className = 'div_img';
