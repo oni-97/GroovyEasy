@@ -4,7 +4,7 @@ body {
 
 #now-playing-track {
     margin: 20px auto;
-    max-width: 750px;
+    max-width: 700px;
     text-align: left;
 }
 
@@ -14,8 +14,20 @@ body {
 }
 
 .card-img img {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+}
+
+.card-img {
+    margin: auto;
+}
+
+#song-name {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+#artists-name {
+    font-size: 3rem;
 }
 
 .card-text {

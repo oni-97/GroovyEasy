@@ -91,9 +91,9 @@ function update() {
                     song_image_uri +
                     "\" alt=\"image of album\" />";
                 target = document.getElementById("song-name");
-                target.innerHTML = "<h2>Title :   " + song_name + "</h2>";
+                target.innerHTML = "Title :   " + song_name;
                 target = document.getElementById("artists-name");
-                target.innerHTML = "<h2>Artist : " + artists_name + "</h2>";
+                target.innerHTML = "Artist : " + artists_name;
 
                 if (is_playing) {
                     $('#resume').hide();
