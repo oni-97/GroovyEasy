@@ -5,8 +5,6 @@ from instance import spotify_info
 import spotipy
 import uuid
 
-spotify_info.export_spotify_info()
-
 app = Flask(__name__, instance_path='/instance')
 app.config['SECRET_KEY'] = os.urandom(64)
 app.config['SESSION_TYPE'] = 'filesystem'
