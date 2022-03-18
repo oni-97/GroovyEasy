@@ -1,5 +1,5 @@
 update();
-setInterval(update, 10000);
+setInterval(update, 1000);
 
 const resume_btn = document.getElementById('resume-btn');
 const pause_btn = document.getElementById('pause-btn');
