@@ -1,7 +1,6 @@
 import os
 from flask import Flask, redirect, request, session, render_template
 from flask_session import Session
-from instance import spotify_info
 import spotipy
 import uuid
 
@@ -176,4 +175,5 @@ def add_to_queue():
 
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=8888)
+    app.run(threaded=True,
+            port=int(os.environ.get('PORT', 8888)))
