@@ -1,3 +1,5 @@
+const params = new URLSearchParams(window.location.search)
+const roomid = params.get('roomid')
 update();
 setInterval(update, 1000);
 
@@ -9,7 +11,7 @@ const skip_pre_btn = document.getElementById('skip-pre-btn');
 pause_btn.addEventListener('click', () => {
     $.ajax({
             type: "GET",
-            url: "/pause_playback",
+            url: "/pause_playback" + '?' + new URLSearchParams({ roomid: roomid }),
         })
         .done(function(data) {
             update();
@@ -22,7 +24,7 @@ pause_btn.addEventListener('click', () => {
 resume_btn.addEventListener('click', () => {
     $.ajax({
             type: "GET",
-            url: "/start_playback",
+            url: "/start_playback" + '?' + new URLSearchParams({ roomid: roomid }),
         })
         .done(function(data) {
             update();
@@ -35,7 +37,7 @@ resume_btn.addEventListener('click', () => {
 skip_next_btn.addEventListener('click', () => {
     $.ajax({
             type: "GET",
-            url: "/next_track",
+            url: "/next_track" + '?' + new URLSearchParams({ roomid: roomid }),
         })
         .done(function(data) {
             update();
@@ -48,7 +50,7 @@ skip_next_btn.addEventListener('click', () => {
 skip_pre_btn.addEventListener('click', () => {
     $.ajax({
             type: "GET",
-            url: "/previous_track",
+            url: "/previous_track" + '?' + new URLSearchParams({ roomid: roomid }),
         })
         .done(function(data) {
             update();
@@ -69,7 +71,7 @@ function escapeHTML(string) {
 function update() {
     $.ajax({
             type: "GET",
-            url: "/currently_playing",
+            url: "/currently_playing" + '?' + new URLSearchParams({ roomid: roomid }),
             // dataType: "json"
         })
         .done(function(data) {

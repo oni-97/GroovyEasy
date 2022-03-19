@@ -1,3 +1,5 @@
+const params = new URLSearchParams(window.location.search)
+const roomid = params.get('roomid')
 const search_query_input = document.getElementById("search_query_input");
 search_query_input.addEventListener('input', () => {
     var input_text = event.currentTarget.value;
@@ -7,7 +9,7 @@ search_query_input.addEventListener('input', () => {
     } else {
         $.ajax({
                 type: "GET",
-                url: "/search_track",
+                url: "/search_track" + '?' + new URLSearchParams({ roomid: roomid }),
                 data: {
                     q: input_text
                 },
@@ -38,7 +40,7 @@ search_query_input.addEventListener('input', () => {
                             if (result) {
                                 $.ajax({
                                         type: "GET",
-                                        url: "/add_to_queue",
+                                        url: "/add_to_queue" + '?' + new URLSearchParams({ roomid: roomid }),
                                         data: {
                                             uri: uri
                                         }
