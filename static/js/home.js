@@ -1,5 +1,18 @@
+const params = new URLSearchParams(window.location.search)
+const roomid = params.get('roomid')
+set_sign_out_link()
 set_copy_link();
 load_user_name();
+
+function set_sign_out_link() {
+    if (new URLSearchParams(window.location.search).has('roomid')) {
+        const params = new URLSearchParams(window.location.search)
+        const sign_out_link = document.getElementById('sign_out_link');
+        const roomid = params.get('roomid')
+        sign_out_link.setAttribute('href', '/sign_out' + '?' + new URLSearchParams({ roomid: roomid }))
+    }
+}
+
 
 function set_copy_link() {
     document.getElementById("copy-page").onclick = function() {
@@ -23,7 +36,7 @@ function escapeHTML(string) {
 function load_user_name() {
     $.ajax({
             type: "GET",
-            url: "/current_user",
+            url: "/current_user" + '?' + new URLSearchParams({ roomid: roomid }),
             dataType: "json"
         })
         .done(function(data) {
