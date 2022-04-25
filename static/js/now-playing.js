@@ -110,6 +110,6 @@ function update() {
             }
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) {
-            alert('fali to read \'currently_playing\'');
+            alert('room was deleted');
         });
 }

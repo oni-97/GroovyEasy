@@ -84,7 +84,7 @@ search_query_input.addEventListener('input', () => {
                 }
             })
             .fail(function(XMLHttpRequest, textStatus, errorThrown) {
-                alert('fali to read \'search\'');
+                alert('room was deleted');
             });
     }
 });
