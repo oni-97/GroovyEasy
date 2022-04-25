@@ -6,6 +6,7 @@ import uuid
 
 app = Flask(__name__, instance_path="/instance")
 app.secret_key = os.urandom(64)
+ROOM_ERROR = "ROOM_ERROR"
 
 caches_folder = "./instance/.spotify_caches/"
 if not os.path.exists(caches_folder):
@@ -67,7 +68,7 @@ def sign_out():
         session.clear()
     except OSError as e:
         print("Error: %s - %s." % (e.filename, e.strerror))
-    return redirect("/")
+    return redirect("/signed_out")
 
 
 @app.route("/current_user")
@@ -77,7 +78,7 @@ def current_user():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/room")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify.current_user()
 
@@ -94,7 +95,7 @@ def currently_playing():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/now_playing")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     track = spotify.current_user_playing_track()
     if not track is None:
@@ -109,7 +110,7 @@ def pause_playback():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/now_playing")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     spotify.pause_playback()
     return redirect("/now_playing")
@@ -122,7 +123,7 @@ def start_playback():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/now_playing")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     spotify.start_playback()
     return redirect("/now_playing")
@@ -135,7 +136,7 @@ def next_track():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/now_playing")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     spotify.next_track()
     return redirect("/now_playing")
@@ -148,7 +149,7 @@ def previous_track():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/now_playing")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     spotify.previous_track()
     return redirect("/now_playing")
@@ -166,7 +167,7 @@ def search_track():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/search")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     data = spotify.search(
         q=request.args.get("q"), limit=10, offset=0, type="track", market=None
@@ -181,10 +182,15 @@ def add_to_queue():
     )
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect("/search")
+        return ROOM_ERROR
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     spotify.add_to_queue(uri=request.args.get("uri"))
     return redirect("/search")
+
+
+@app.route("/signed_out")
+def signed_out():
+    return render_template("signed-out.html")
 
 
 if __name__ == "__main__":
