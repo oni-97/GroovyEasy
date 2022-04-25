@@ -75,6 +75,11 @@ function update() {
             // dataType: "json"
         })
         .done(function(data) {
+            if (data == "ROOM_ERROR") {
+                window.location.href = "/signed_out";
+                return;
+            }
+
             if (data == 'No track currently playing.') {
                 target = document.getElementById("now-playing-track");
                 target.innerHTML = data;

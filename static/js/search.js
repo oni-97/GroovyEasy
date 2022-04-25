@@ -13,9 +13,14 @@ search_query_input.addEventListener('input', () => {
                 data: {
                     q: input_text
                 },
-                dataType: 'json'
+                // dataType: 'json'
             })
             .done(function(data) {
+                if (data == "ROOM_ERROR") {
+                    window.location.href = "/signed_out";
+                    return;
+                }
+
                 if (data['tracks']['items'].length == 0) {
                     target = document.getElementById("search_result");
                     target.innerHTML = "No results found for \"" + input_text + "\"";
