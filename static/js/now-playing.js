@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search)
 const roomid = params.get('roomid')
 update();
-setInterval(update, 1000);
+const timmerId = setInterval(update, 1000);
 
 const resume_btn = document.getElementById('resume-btn');
 const pause_btn = document.getElementById('pause-btn');
@@ -110,6 +110,7 @@ function update() {
             }
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+            clearInterval(timmerId);
             alert('room was deleted');
         });
 }
