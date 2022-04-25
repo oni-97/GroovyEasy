@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search)
 const roomid = params.get('roomid')
 update();
-setInterval(update, 1000);
+const timmerId = setInterval(update, 1000);
 
 const resume_btn = document.getElementById('resume-btn');
 const pause_btn = document.getElementById('pause-btn');
@@ -75,6 +75,11 @@ function update() {
             // dataType: "json"
         })
         .done(function(data) {
+            if (data == "ROOM_ERROR") {
+                window.location.href = "/signed_out";
+                return;
+            }
+
             if (data == 'No track currently playing.') {
                 target = document.getElementById("now-playing-track");
                 target.innerHTML = data;
@@ -110,6 +115,7 @@ function update() {
             }
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) {
-            alert('fali to read \'currently_playing\'');
+            clearInterval(timmerId);
+            alert('room was deleted');
         });
 }

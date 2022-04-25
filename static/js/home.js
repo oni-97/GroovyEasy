@@ -37,14 +37,18 @@ function load_user_name() {
     $.ajax({
             type: "GET",
             url: "/current_user" + '?' + new URLSearchParams({ roomid: roomid }),
-            dataType: "json"
+            // dataType: "json"
         })
         .done(function(data) {
+            if (data == "ROOM_ERROR") {
+                window.location.href = "/signed_out";
+                return;
+            }
             var display_name = escapeHTML(data['display_name']);
             target = document.getElementById("user-profile");
             target.innerHTML = "<h1>Logged in as " + display_name;
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) {
-            alert('fali to read \'current_user\'');
+            alert('room was deleted');
         });
 }
