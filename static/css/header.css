@@ -28,3 +28,13 @@
     font-weight: bold;
     padding: 20px;
 }
+
+.spotify_icon {
+    margin-top: 5px;
+    margin-left: 20px;
+    text-align: left;
+}
+
+.spotify_icon img {
+    height: 70px;
+}
