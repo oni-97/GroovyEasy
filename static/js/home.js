@@ -49,6 +49,6 @@ function load_user_name() {
             target.innerHTML = "<h1>Logged in as " + display_name;
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) {
-            alert('room was deleted');
+            alert('failed to read \'current user\'');
         });
 }
