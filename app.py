@@ -80,8 +80,6 @@ def is_premium_account():
     except spotipy.SpotifyException as e:
         if e.reason == "PREMIUM_REQUIRED":
             return e.reason
-        else:
-            return "ERROR"
     return "OK"
 
 
