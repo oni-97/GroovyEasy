@@ -57,7 +57,30 @@ def login():
 
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    result = is_premium_account()
+    if result == ROOM_ERROR or result == "ERROR":
+        return render_template("signed-out.html")
+    elif result == "PREMIUM_REQUIRED":
+        return render_template("need-premium.html")
+    else:
+        return render_template("home.html")
+
+
+def is_premium_account():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=roomid_cache_path(request.args.get("roomid"))
+    )
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return ROOM_ERROR
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+    try:
+        print(spotify.start_playback())
+    except spotipy.SpotifyException as e:
+        if e.reason == "PREMIUM_REQUIRED":
+            return e.reason
+    return "OK"
 
 
 @app.route("/sign_out")

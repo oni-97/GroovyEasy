@@ -116,6 +116,6 @@ function update() {
         })
         .fail(function(XMLHttpRequest, textStatus, errorThrown) {
             clearInterval(timmerId);
-            alert('room was deleted');
+            alert('failed to read \'current playing track\'');
         });
 }
