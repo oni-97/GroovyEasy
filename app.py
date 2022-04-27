@@ -193,5 +193,23 @@ def signed_out():
     return render_template("signed-out.html")
 
 
+@app.route("/is_premium_account")
+def is_premium_account():
+    cache_handler = spotipy.cache_handler.CacheFileHandler(
+        cache_path=roomid_cache_path(request.args.get("roomid"))
+    )
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return ROOM_ERROR
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+    try:
+        print(spotify.start_playback())
+    except spotipy.SpotifyException as e:
+        if e.reason == "PREMIUM_REQUIRED":
+            return False
+    return True
+
+
 if __name__ == "__main__":
     app.run(threaded=True, port=int(os.environ.get("PORT", 8888)))
