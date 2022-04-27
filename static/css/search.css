@@ -41,3 +41,37 @@ body {
     cursor: pointer;
     opacity: .7;
 }
+
+.spotify_link {
+    display: inline-block;
+    padding: 2px 15px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    border-radius: 100vh;
+    position: relative;
+}
+
+.spotify_link:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+.spotify_link img {
+    height: 21px;
+    width: 21px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.spotify_link span {
+    display: inline-block;
+}
+
+.spotify_link a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
