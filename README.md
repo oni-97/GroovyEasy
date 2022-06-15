@@ -6,7 +6,7 @@ Spotify（音楽ストリーミングサービス）を複数人で共有して�
 - アプリログイン後、リンクを共有することで誰でもSpotifyを操作可能（Spotifyアカウントを持っていなくてもよい）
 
 ## App URL 
-### **https://groovyeasy.herokuapp.com/**  
+### **https://groovyeasy.azurewebsites.net/**  
 
 ## Features　
 
